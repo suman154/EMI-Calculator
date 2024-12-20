@@ -1,0 +1,92 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMI Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .calculator-container {
+            max-width: 800px;
+            margin: 50px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .form-box {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            width: 45%;
+        }
+        .results-box {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #ffffff;
+            width: 45%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">EMI Calculator</h1>
+        <div class="calculator-container">
+            <div class="form-box">
+                <form id="emiForm">
+                    <div class="mb-3">
+                        <label for="loan_amount" class="form-label">Loan Amount</label>
+                        <input type="number" class="form-control" id="loan_amount" name="loan_amount" placeholder="Enter loan amount" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="loan_rate" class="form-label">Loan Rate (%)</label>
+                        <input type="number" class="form-control" id="loan_rate" name="loan_rate" placeholder="Enter annual interest rate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="loan_tenure" class="form-label">Loan Tenure</label>
+                        <input type="number" class="form-control" id="loan_tenure" name="loan_tenure" placeholder="Enter tenure" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tenure Type</label><br>
+                        <input type="radio" id="years" name="tenure_type" value="Years" checked> <label for="years">Years</label>
+                        <input type="radio" id="months" name="tenure_type" value="Months"> <label for="months">Months</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Calculate</button>
+                </form>
+            </div>
+            <div class="results-box">
+                <h5>Loan EMI: <span id="emi_result">-</span></h5>
+                <h5>Total Interest Payable: <span id="total_interest">-</span></h5>
+                <h5>Total Payment: <span id="total_payment">-</span></h5>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $("#emiForm").on("submit", function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: "",
+                type: "POST",
+                data: $(this).serialize(),
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                success: function(response) {
+                    if (response.error) {
+                        alert(response.error);
+                    } else {
+                        $("#emi_result").text("Rs." + response.emi);
+                        $("#total_interest").text("Rs." + response.total_interest);
+                        $("#total_payment").text("Rs." + response.total_payment);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
