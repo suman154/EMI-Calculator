@@ -1,1 +1,1 @@
-# EMI-Calculator
+# Equated Monthly Installment(EMI) - Calculator
